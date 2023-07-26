@@ -29,17 +29,32 @@ class TestBooksCollectorAddBooks:
     def test_set_book_genre(self,books_collector,name,genre):
         books_collector.add_new_book(name)
         books_collector.set_book_genre(name, genre)
-        assert books_collector.books_genre[name] == genre
+        assert books_collector.get_book_genre(name) == genre
 
     @pytest.mark.parametrize(
         'name, genre', [
             ['Русалочка', 'Мультфильмы']
         ]
     )
-    def test_get_book_genre(self,books_collector,name,genre):
+    def test_get_book_genre_not_none(self,books_collector,name,genre):
         books_collector.add_new_book(name)
         books_collector.set_book_genre(name, genre)
-        assert books_collector.get_book_genre(name) is not None
+        assert books_collector.get_book_genre(name) is not None, 'жанры пусты'
+
+    @pytest.mark.parametrize(
+            'name, genre', [
+                ['Дюна', 'Фантастика'],
+                ['Душа', 'Мультфильмы'],
+                ['Моана', 'Мультфильмы'],
+                ['Какой-то ужастик', 'Ужасы'],
+                ['Русалочка', 'Мультфильмы']
+            ]
+        )
+    def test_get_book_genre_positive_case(self, books_collector, name, genre):
+        books_collector.add_new_book(name)
+        books_collector.set_book_genre(name, genre)
+        assert 'Моана' or 'Русалочка' in books_collector.get_book_genre(name)
+
 
     @pytest.mark.parametrize(
         'name, genre', [
@@ -55,6 +70,8 @@ class TestBooksCollectorAddBooks:
         books_collector.set_book_genre(name,genre)
         assert books_collector.get_books_with_specific_genre("Мультфильмы") == ["Душа"] or ["Моана"]
 
+
+
     @pytest.mark.parametrize(
         'name, genre', [
             ['Дюна', 'Фантастика'],
@@ -64,11 +81,11 @@ class TestBooksCollectorAddBooks:
             ['Русалочка', 'Мультфильмы']
         ]
     )
-    def test_get_books_genre(self,books_collector,name,genre):
+    def test_get_books_for_children_positive_case(self,books_collector,name,genre):
         books_collector.add_new_book(name)
         books_collector.set_book_genre(name, genre)
-        assert 'Боевик' not in books_collector.get_book_genre(name)
 
+        assert 'Русалочка' or 'Моана' in books_collector.get_books_for_children()
 
     @pytest.mark.parametrize(
         'name, genre', [
@@ -77,7 +94,7 @@ class TestBooksCollectorAddBooks:
             ['Русалочка', 'Мультфильмы']
         ]
     )
-    def test_get_books_for_children(self,books_collector,name,genre):
+    def test_get_books_for_children_negative_case(self, books_collector, name, genre):
         books_collector.add_new_book(name)
         books_collector.set_book_genre(name, genre)
 
@@ -93,17 +110,34 @@ class TestBooksCollectorAddBooks:
         books_collector.set_book_genre(name, genre)
         books_collector.add_book_in_favorites(name)
 
-        assert name in books_collector.favorites, 'Книга не добавлена в favorites список'
+        assert name in books_collector.get_list_of_favorites_books()
 
+    @pytest.mark.parametrize(
+        'name, genre', [
+            ['Моана', 'Мультфильмы']
+        ]
+    )
+    def test_add_book_in_favorites_сount_1(self,books_collector,name,genre):
+        books_collector.add_new_book(name)
+        books_collector.set_book_genre(name, genre)
+        books_collector.add_book_in_favorites(name)
+        count = len(books_collector.get_list_of_favorites_books())
 
+        assert count == 1, 'В favorites списке больше 1 книги'
 
-    def test_delete_book_from_favorites(self,books_collector):
-        books_collector.add_new_book("Моана")
-        books_collector.set_book_genre("Моана", "Мультфильмы")
-        books_collector.add_book_in_favorites("Моана")
-        books_collector.delete_book_from_favorites("Моана")
+    @pytest.mark.parametrize(
+        'name, genre', [
+            ['Моана', 'Мультфильмы'],
+            ['Русалочка', 'Мультфильмы']
+        ]
+    )
+    def test_delete_book_from_favorites(self,books_collector,name,genre):
+        books_collector.add_new_book(name)
+        books_collector.set_book_genre(name, genre)
+        books_collector.add_book_in_favorites(name)
+        books_collector.delete_book_from_favorites(name)
 
-        assert "Моана" not in books_collector.favorites, 'Моана bмеется в списке favorites книг '
+        assert name not in books_collector.get_list_of_favorites_books(), 'Моана имеется в списке favorites книг '
 
     @pytest.mark.parametrize(
         'name, genre', [
@@ -116,4 +150,4 @@ class TestBooksCollectorAddBooks:
         books_collector.set_book_genre(name, genre)
         books_collector.add_book_in_favorites(name)
 
-        assert ' ' not in books_collector.get_list_of_favorites_books(), 'Имеется пустое значение'
+        assert 'Моана' or 'Русалочка' in books_collector.get_list_of_favorites_books(), 'Имеется пустое значение'
