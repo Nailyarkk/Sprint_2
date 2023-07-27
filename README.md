@@ -6,7 +6,7 @@ added test_add_new_book_empty_name - checking for adding a book with an empty
 title test_add_new_book_invalid_name -check for adding a book with an invalid 
 title for set_book_genre method: test_set_book_genre, parametrization was used
 for get_book_genre method:test_get_book_genre_not_none with used parameterization 
-methodtest_get_book_genre_positive_case with used parameterization method for the 
+ method for the 
 get_books_with_specific_genre method, a test was written using the 
 parameterization test_get_books_with_specific_genre
 for the get_books_genre method, a test was written using the test_get_books_genre 

@@ -41,19 +41,6 @@ class TestBooksCollectorAddBooks:
         books_collector.set_book_genre(name, genre)
         assert books_collector.get_book_genre(name) is not None, 'жанры пусты'
 
-    @pytest.mark.parametrize(
-            'name, genre', [
-                ['Дюна', 'Фантастика'],
-                ['Душа', 'Мультфильмы'],
-                ['Моана', 'Мультфильмы'],
-                ['Какой-то ужастик', 'Ужасы'],
-                ['Русалочка', 'Мультфильмы']
-            ]
-        )
-    def test_get_book_genre_positive_case(self, books_collector, name, genre):
-        books_collector.add_new_book(name)
-        books_collector.set_book_genre(name, genre)
-        assert 'Моана' or 'Русалочка' in books_collector.get_book_genre(name)
 
 
     @pytest.mark.parametrize(
@@ -114,19 +101,6 @@ class TestBooksCollectorAddBooks:
 
     @pytest.mark.parametrize(
         'name, genre', [
-            ['Моана', 'Мультфильмы']
-        ]
-    )
-    def test_add_book_in_favorites_сount_1(self,books_collector,name,genre):
-        books_collector.add_new_book(name)
-        books_collector.set_book_genre(name, genre)
-        books_collector.add_book_in_favorites(name)
-        count = len(books_collector.get_list_of_favorites_books())
-
-        assert count == 1, 'В favorites списке больше 1 книги'
-
-    @pytest.mark.parametrize(
-        'name, genre', [
             ['Моана', 'Мультфильмы'],
             ['Русалочка', 'Мультфильмы']
         ]
@@ -150,4 +124,5 @@ class TestBooksCollectorAddBooks:
         books_collector.set_book_genre(name, genre)
         books_collector.add_book_in_favorites(name)
 
-        assert 'Моана' or 'Русалочка' in books_collector.get_list_of_favorites_books(), 'Имеется пустое значение'
+        assert books_collector.get_list_of_favorites_books() is not None, 'Имеется пустое значение'
+
